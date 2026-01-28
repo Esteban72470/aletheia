@@ -1,0 +1,215 @@
+# Aletheia Application Catalog Entry
+# This file defines the application catalog metadata for service discovery
+
+apiVersion: appcat/v1
+kind: ApplicationCatalog
+metadata:
+  name: aletheia
+  title: Aletheia Document Perception System
+  description: >
+    A perceptual subsystem for developer agents that bridges visual, spatial,
+    and semi-structured knowledge into symbolic representations for AI coding
+    assistants.
+  version: 0.2.0
+  maintainers:
+    - name: Aletheia Team
+      email: team@aletheia.dev
+  labels:
+    category: developer-tools
+    domain: document-processing
+    ai-enabled: "true"
+
+spec:
+  # Application type and lifecycle
+  type: service
+  lifecycle: production
+  tier: platform
+
+  # Documentation and links
+  links:
+    - title: Documentation
+      url: https://aletheia.dev/docs
+      type: documentation
+    - title: Repository
+      url: https://github.com/aletheia/aletheia
+      type: source
+    - title: API Reference
+      url: https://aletheia.dev/api
+      type: api-docs
+    - title: Issue Tracker
+      url: https://github.com/aletheia/aletheia/issues
+      type: issues
+
+  # Technical specifications
+  technical:
+    language: python
+    framework: fastapi
+    runtime: container
+    architecture: microservice
+
+  # Service endpoints
+  endpoints:
+    - name: api
+      protocol: http
+      port: 8420
+      path: /api/v1
+      description: Main REST API endpoint
+      authentication: optional
+
+    - name: health
+      protocol: http
+      port: 8420
+      path: /health
+      description: Health check endpoint
+      authentication: none
+
+    - name: metrics
+      protocol: http
+      port: 8420
+      path: /metrics
+      description: Prometheus metrics endpoint
+      authentication: none
+
+  # Capabilities provided
+  capabilities:
+    - name: document-parsing
+      description: Parse PDF, images, and scanned documents
+      version: "1.0"
+
+    - name: text-extraction
+      description: Extract text with OCR and embedded text support
+      version: "1.0"
+
+    - name: layout-analysis
+      description: Detect document layout and block structure
+      version: "1.0"
+
+    - name: table-detection
+      description: Detect and extract tables from documents
+      version: "0.1"
+      status: planned
+
+    - name: figure-extraction
+      description: Extract figures and diagrams
+      version: "0.1"
+      status: planned
+
+  # Dependencies on other services
+  dependencies:
+    - name: tesseract-ocr
+      type: system
+      required: true
+      description: OCR engine for text extraction
+
+    - name: poppler
+      type: system
+      required: true
+      description: PDF rendering library
+
+    - name: detectron2
+      type: ml-model
+      required: false
+      description: GPU-accelerated layout detection
+
+  # Resource requirements
+  resources:
+    compute:
+      cpu:
+        minimum: "250m"
+        recommended: "1000m"
+      memory:
+        minimum: "512Mi"
+        recommended: "2Gi"
+      gpu:
+        required: false
+        recommended: true
+        type: nvidia
+
+    storage:
+      cache:
+        size: "10Gi"
+        type: ephemeral
+      documents:
+        size: "50Gi"
+        type: persistent
+
+  # API definitions
+  apis:
+    - name: parse
+      type: rest
+      method: POST
+      path: /api/v1/parse
+      description: Parse a document and extract structured content
+      requestFormat: multipart/form-data
+      responseFormat: application/json
+
+    - name: query
+      type: rest
+      method: POST
+      path: /api/v1/query
+      description: Query a parsed document
+      requestFormat: application/json
+      responseFormat: application/json
+
+    - name: documents
+      type: rest
+      method: GET
+      path: /api/v1/documents/{id}
+      description: Retrieve a stored document
+      responseFormat: application/json
+
+  # Ownership and support
+  ownership:
+    team: platform-tools
+    slack: "#aletheia-support"
+    oncall: aletheia-oncall
+    escalation:
+      - level: 1
+        contact: aletheia-oncall
+        response: 30m
+      - level: 2
+        contact: platform-leads
+        response: 2h
+
+  # Compliance and security
+  compliance:
+    dataClassification: internal
+    pii: false
+    encryption:
+      atRest: true
+      inTransit: true
+    audit:
+      enabled: true
+      retention: 90d
+
+  # Tags for discovery
+  tags:
+    - document-processing
+    - ocr
+    - pdf-parsing
+    - ai-assistant
+    - developer-tools
+    - layout-analysis
+    - machine-learning
+
+  # Integration points
+  integrations:
+    - name: vscode
+      type: extension
+      description: VS Code extension for document preview
+      status: planned
+
+    - name: github-copilot
+      type: ai-agent
+      description: Integration with GitHub Copilot
+      status: planned
+
+    - name: prometheus
+      type: monitoring
+      description: Metrics export for monitoring
+      status: active
+
+    - name: elasticsearch
+      type: logging
+      description: Log aggregation
+      status: planned

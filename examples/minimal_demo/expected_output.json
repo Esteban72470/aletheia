@@ -1,0 +1,62 @@
+{
+    "$schema": "../../shared_schemas/document.schema.json",
+    "document_id": "sample-001",
+    "source": {
+        "filename": "sample.pdf",
+        "uri": "file:///examples/minimal_demo/sample.pdf",
+        "mime_type": "application/pdf",
+        "size_bytes": 12345,
+        "hash": "sha256:abc123..."
+    },
+    "metadata": {
+        "title": "Sample Document",
+        "author": "Aletheia Team",
+        "creation_date": "2024-01-01T00:00:00Z",
+        "page_count": 1
+    },
+    "pages": [
+        {
+            "page_number": 1,
+            "width": 612,
+            "height": 792,
+            "blocks": [
+                {
+                    "block_id": "b1",
+                    "type": "heading",
+                    "content": "Sample Document",
+                    "bounding_box": {
+                        "x": 72,
+                        "y": 72,
+                        "width": 468,
+                        "height": 24
+                    },
+                    "confidence": 0.98
+                },
+                {
+                    "block_id": "b2",
+                    "type": "paragraph",
+                    "content": "This is a sample document for testing Aletheia's document parsing capabilities. It contains simple text content that should be extracted accurately.",
+                    "bounding_box": {
+                        "x": 72,
+                        "y": 108,
+                        "width": 468,
+                        "height": 48
+                    },
+                    "confidence": 0.95
+                }
+            ]
+        }
+    ],
+    "provenance": {
+        "parser_version": "0.1.0",
+        "parsed_at": "2024-01-01T12:00:00Z",
+        "pipeline_stages": [
+            "ingest",
+            "preprocess",
+            "layout",
+            "ocr",
+            "postprocess"
+        ],
+        "processing_time_ms": 250
+    }
+}

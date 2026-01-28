@@ -1,0 +1,27 @@
+/* Aletheia Extension Media Styles */
+
+:root {
+    --aletheia-primary: #3b82f6;
+    --aletheia-secondary: #22c55e;
+}
+
+.aletheia-container {
+    padding: 20px;
+}
+
+.aletheia-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.aletheia-icon {
+    width: 48px;
+    height: 48px;
+    margin-right: 12px;
+}
+
+.aletheia-title {
+    font-size: 1.5em;
+    font-weight: bold;
+}

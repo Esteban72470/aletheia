@@ -1,0 +1,17 @@
+#!/bin/bash
+# Post-installation script for Aletheia
+
+set -e
+
+# Create configuration directory if not exists
+mkdir -p /etc/aletheia
+
+# Set permissions
+chmod 755 /usr/local/bin/aletheia
+
+# Create log directory
+mkdir -p /var/log/aletheia
+chmod 755 /var/log/aletheia
+
+echo "Aletheia installed successfully!"
+echo "Run 'aletheia --help' to get started."

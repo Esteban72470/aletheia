@@ -1,0 +1,9 @@
+#!/bin/bash
+# Pre-removal script for Aletheia
+
+set -e
+
+# Stop any running sidecar processes
+pkill -f "aletheia-sidecar" || true
+
+echo "Aletheia will be removed."

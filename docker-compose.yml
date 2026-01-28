@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  sidecar:
+    build:
+      context: ./sidecar
+      dockerfile: Dockerfile
+    container_name: aletheia-sidecar
+    ports:
+      - "8420:8420"
+    volumes:
+      - aletheia-cache:/app/cache
+      - aletheia-models:/app/models
+    environment:
+      - ALETHEIA_ENV=development
+      - ALETHEIA_LOG_LEVEL=INFO
+      - ALETHEIA_CACHE_DIR=/app/cache
+      - ALETHEIA_MODELS_DIR=/app/models
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8420/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  aletheia-cache:
+  aletheia-models:

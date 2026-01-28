@@ -1,0 +1,151 @@
+# Aletheia Application Modernization Configuration
+# This file defines modernization targets and migration paths
+
+apiVersion: appmod/v1
+kind: ModernizationConfig
+metadata:
+  name: aletheia
+  version: 0.2.0
+  description: Document perception system for AI coding agents
+
+spec:
+  # Source application details
+  source:
+    type: python-monorepo
+    language: python
+    version: "3.11"
+    framework: fastapi
+    buildSystem: pip
+
+  # Target modernization
+  target:
+    runtime: container
+    orchestration: kubernetes
+    registry: ghcr.io/aletheia
+
+  # Components to modernize
+  components:
+    - name: sidecar
+      path: ./sidecar
+      type: api-service
+      port: 8420
+      healthCheck: /health
+      readinessCheck: /ready
+      resources:
+        cpu: "500m"
+        memory: "1Gi"
+        gpu: optional
+      dependencies:
+        - tesseract-ocr
+        - poppler-utils
+      modernization:
+        containerize: true
+        dockerfile: ./packaging/docker/sidecar.Dockerfile
+        baseImage: python:3.11-slim
+
+    - name: cli
+      path: ./cli
+      type: cli-tool
+      entrypoint: aletheia
+      modernization:
+        containerize: true
+        dockerfile: ./packaging/docker/cli.Dockerfile
+        baseImage: python:3.11-slim
+
+    - name: extension
+      path: ./extension/vscode
+      type: vscode-extension
+      modernization:
+        package: vsix
+        marketplace: true
+
+  # Migration strategies
+  migrations:
+    - name: containerization
+      description: Package services as containers
+      steps:
+        - generate-dockerfile
+        - build-image
+        - push-registry
+        - deploy-kubernetes
+
+    - name: cloud-native
+      description: Deploy to cloud-native infrastructure
+      steps:
+        - provision-infrastructure
+        - configure-networking
+        - deploy-services
+        - setup-monitoring
+
+  # Environment configurations
+  environments:
+    development:
+      replicas: 1
+      resources:
+        cpu: "250m"
+        memory: "512Mi"
+
+    staging:
+      replicas: 2
+      resources:
+        cpu: "500m"
+        memory: "1Gi"
+
+    production:
+      replicas: 3
+      resources:
+        cpu: "1000m"
+        memory: "2Gi"
+      autoscaling:
+        enabled: true
+        minReplicas: 3
+        maxReplicas: 10
+        targetCPU: 70
+
+  # Dependencies and external services
+  dependencies:
+    required:
+      - name: tesseract
+        type: system
+        version: ">=4.0"
+      - name: poppler
+        type: system
+        version: ">=21.0"
+
+    optional:
+      - name: detectron2
+        type: python
+        purpose: GPU-accelerated layout detection
+      - name: layoutparser
+        type: python
+        purpose: Document layout analysis
+
+  # Security configurations
+  security:
+    scanning:
+      enabled: true
+      tools:
+        - trivy
+        - snyk
+    secrets:
+      provider: vault
+      rotation: 30d
+    network:
+      ingress: restricted
+      egress: allowed
+
+  # Observability
+  observability:
+    logging:
+      format: json
+      level: INFO
+      aggregation: elasticsearch
+    metrics:
+      enabled: true
+      provider: prometheus
+      endpoints:
+        - /metrics
+    tracing:
+      enabled: true
+      provider: jaeger
+      samplingRate: 0.1

@@ -1,0 +1,144 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "$id": "https://aletheia.dev/schemas/provenance.schema.json",
+    "title": "Provenance",
+    "description": "Schema for tracking extraction provenance and traceability",
+    "type": "object",
+    "required": [
+        "provenance_id",
+        "source",
+        "extractions"
+    ],
+    "properties": {
+        "provenance_id": {
+            "type": "string",
+            "description": "Unique identifier for this provenance record"
+        },
+        "source": {
+            "$ref": "#/definitions/SourceDocument"
+        },
+        "extractions": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/Extraction"
+            }
+        },
+        "pipeline": {
+            "$ref": "#/definitions/PipelineInfo"
+        }
+    },
+    "definitions": {
+        "SourceDocument": {
+            "type": "object",
+            "required": [
+                "document_id",
+                "hash"
+            ],
+            "properties": {
+                "document_id": {
+                    "type": "string"
+                },
+                "filename": {
+                    "type": "string"
+                },
+                "hash": {
+                    "type": "string",
+                    "description": "SHA-256 hash of source file"
+                },
+                "accessed_at": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            }
+        },
+        "Extraction": {
+            "type": "object",
+            "required": [
+                "extraction_id",
+                "type",
+                "location"
+            ],
+            "properties": {
+                "extraction_id": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "text",
+                        "table",
+                        "figure",
+                        "diagram",
+                        "key_value"
+                    ]
+                },
+                "location": {
+                    "type": "object",
+                    "properties": {
+                        "page": {
+                            "type": "integer"
+                        },
+                        "bbox": {
+                            "$ref": "#/definitions/BoundingBox"
+                        }
+                    }
+                },
+                "value": {
+                    "description": "The extracted value (string, object, etc.)"
+                },
+                "confidence": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                },
+                "model": {
+                    "type": "string",
+                    "description": "Model/method used for extraction"
+                },
+                "timestamp": {
+                    "type": "string",
+                    "format": "date-time"
+                }
+            }
+        },
+        "PipelineInfo": {
+            "type": "object",
+            "properties": {
+                "version": {
+                    "type": "string"
+                },
+                "stages": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string"
+                            },
+                            "model": {
+                                "type": "string"
+                            },
+                            "version": {
+                                "type": "string"
+                            },
+                            "duration_ms": {
+                                "type": "integer"
+                            }
+                        }
+                    }
+                },
+                "total_duration_ms": {
+                    "type": "integer"
+                }
+            }
+        },
+        "BoundingBox": {
+            "type": "array",
+            "items": {
+                "type": "number"
+            },
+            "minItems": 4,
+            "maxItems": 4
+        }
+    }
+}

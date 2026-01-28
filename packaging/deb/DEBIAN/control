@@ -1,0 +1,12 @@
+Package: aletheia
+Version: 0.1.0
+Section: utils
+Priority: optional
+Architecture: amd64
+Depends: python3 (>= 3.10), tesseract-ocr, poppler-utils
+Maintainer: Aletheia Team <team@aletheia.dev>
+Description: Document Parser for AI Agents
+ Aletheia is a document and image parsing tool designed for
+ AI agents like GitHub Copilot. It extracts structured content
+ from PDFs, images, and diagrams with semantic understanding.
+Homepage: https://github.com/aletheia/aletheia

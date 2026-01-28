@@ -1,0 +1,127 @@
+{
+    "name": "aletheia",
+    "displayName": "Aletheia",
+    "description": "Document and image parser for AI agents - Parse PDFs, images, and diagrams for use with GitHub Copilot",
+    "version": "0.1.0",
+    "publisher": "aletheia",
+    "license": "MIT",
+    "engines": {
+        "vscode": "^1.85.0"
+    },
+    "categories": [
+        "Other",
+        "Machine Learning",
+        "Visualization"
+    ],
+    "keywords": [
+        "document",
+        "pdf",
+        "ocr",
+        "copilot",
+        "ai",
+        "parsing"
+    ],
+    "activationEvents": [
+        "onCommand:aletheia.parseFile",
+        "onCommand:aletheia.preview",
+        "onCommand:aletheia.startSidecar"
+    ],
+    "main": "./out/extension.js",
+    "contributes": {
+        "commands": [
+            {
+                "command": "aletheia.parseFile",
+                "title": "Aletheia: Parse File"
+            },
+            {
+                "command": "aletheia.preview",
+                "title": "Aletheia: Preview Parsed Document"
+            },
+            {
+                "command": "aletheia.insertBlock",
+                "title": "Aletheia: Insert Selected Block"
+            },
+            {
+                "command": "aletheia.startSidecar",
+                "title": "Aletheia: Start Sidecar Service"
+            },
+            {
+                "command": "aletheia.stopSidecar",
+                "title": "Aletheia: Stop Sidecar Service"
+            }
+        ],
+        "menus": {
+            "explorer/context": [
+                {
+                    "command": "aletheia.parseFile",
+                    "when": "resourceExtname == .pdf || resourceExtname == .png || resourceExtname == .jpg || resourceExtname == .jpeg",
+                    "group": "aletheia"
+                }
+            ]
+        },
+        "configuration": {
+            "title": "Aletheia",
+            "properties": {
+                "aletheia.sidecar.host": {
+                    "type": "string",
+                    "default": "127.0.0.1",
+                    "description": "Sidecar service host"
+                },
+                "aletheia.sidecar.port": {
+                    "type": "number",
+                    "default": 8420,
+                    "description": "Sidecar service port"
+                },
+                "aletheia.sidecar.autoStart": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Automatically start sidecar on activation"
+                },
+                "aletheia.cache.enabled": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Enable result caching"
+                },
+                "aletheia.preview.showOverlay": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Show bounding box overlay in preview"
+                },
+                "aletheia.preview.theme": {
+                    "type": "string",
+                    "enum": [
+                        "auto",
+                        "light",
+                        "dark"
+                    ],
+                    "default": "auto",
+                    "description": "Preview theme"
+                }
+            }
+        }
+    },
+    "scripts": {
+        "vscode:prepublish": "npm run compile",
+        "compile": "webpack --mode production",
+        "watch": "webpack --mode development --watch",
+        "lint": "eslint src --ext ts",
+        "test": "node ./out/test/runTest.js",
+        "package": "vsce package",
+        "clean": "rimraf out"
+    },
+    "devDependencies": {
+        "@types/node": "^20.10.0",
+        "@types/vscode": "^1.85.0",
+        "@typescript-eslint/eslint-plugin": "^6.15.0",
+        "@typescript-eslint/parser": "^6.15.0",
+        "eslint": "^8.56.0",
+        "rimraf": "^5.0.5",
+        "ts-loader": "^9.5.1",
+        "typescript": "^5.3.0",
+        "webpack": "^5.89.0",
+        "webpack-cli": "^5.1.4"
+    },
+    "dependencies": {
+        "node-fetch": "^3.3.2"
+    }
+}
